@@ -1,0 +1,40 @@
+{
+	"debug": true,
+	"bots": [
+		{
+			"type": "discordClient",
+			"actionPrefix": ".",
+			"token": "",
+			"actions": [
+				{
+					"plugin": "battlemetrics",
+					"command": "status rust",
+					"options": {
+						"serverId": "3142448"
+					}
+				},
+				{
+					"plugin": "fivem",
+					"command": "status fivem",
+					"options": {
+						"server": "108.94.43.158:30120"
+					}
+				},
+				{
+					"plugin": "mcsrvstatus",
+					"command": "status minecraft",
+					"options": {
+						"server": "k33ncraft.k33ngaming.com:11654"
+					}
+				},
+				{
+					"plugin": "penis",
+					"command": "penis",
+					"options": {
+						"message": "I like penis"
+					}
+				}
+			]
+		}
+	]
+}

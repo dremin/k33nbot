@@ -1,0 +1,30 @@
+{
+  "name": "k33nbot",
+  "version": "1.0.0",
+  "description": "Node-powered Discord bots for game servers",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/k33ngaming/k33nbot.git"
+  },
+  "keywords": [
+    "k33nbot",
+    "discord",
+    "game",
+    "server",
+    "bot"
+  ],
+  "author": "K33N Gaming Community",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/k33ngaming/k33nbot/issues"
+  },
+  "homepage": "https://github.com/k33ngaming/k33nbot#readme",
+  "dependencies": {
+    "discord.js": "^11.4.2",
+    "request": "^2.88.0"
+  }
+}

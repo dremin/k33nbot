@@ -1,3 +1,4 @@
-# k33nbot
+# K33NBot
+ReadMe coming soon...
 
-Test
+© 2019 K33N Gaming Community

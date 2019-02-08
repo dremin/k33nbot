@@ -1,8 +1,11 @@
 'use strict';
 
-const config = require('./config').config;
-
-function bot(botConfig) {
+function Bot(botConfig) {
+	if (!(botConfig.hasOwnProperty("actionPrefix") && botConfig.hasOwnProperty("token") && botConfig.hasOwnProperty("actions") && botConfig.hasOwnProperty("type"))) {
+		console.log("Incomplete bot configuration.");
+		return this;
+	}
+	
 	this.type;
 	this.actions = [];
 	
@@ -23,4 +26,4 @@ function bot(botConfig) {
 	return this;
 }
 
-module.exports = bot;
+module.exports = Bot;

@@ -1,44 +1,71 @@
 'use strict';
 
 const url = 'https://servers-live.fivem.net/api/servers/single/';
-const config = require('../common/config').config;
 const request = require('../common/jsonRequest');
+const fetchTimeMs = 600000;
 var server = '0.0.0.0:0';
+var message = '';
+var name = 'FiveM';
+var presence = '';
 
-function fivem(client, options) {
-	
-	// set server id
-	server = options.server;
-
-	// register message event
-	this.onMessage = (message) => {
-		getStatus(message);
-	}
-	
-}
-
-function getStatus(message) {
-	request(url + server).then((data) => {
-		sendOnlineStatus(data, message);
-	},
-	(reason) => {
-		sendOfflineStatus(message);
-	});
-}
-
-function sendOnlineStatus(data, message) {
-	if (!(data.hasOwnProperty("Data") && data.Data.hasOwnProperty("hostname") && data.Data.hasOwnProperty("clients") && data.Data.hasOwnProperty("svMaxclients") && Date.now() - Date.parse(data.Data.lastSeen) < 600000)) {
-		sendOfflineStatus(message);
+function Fivem(bot, options) {
+	if (!options.hasOwnProperty("server")) {
+		console.log("FiveM plugin requires the server option to be present.");
 		return;
 	}
 	
-	message.reply(`**Server Online**\`\`\`${data.Data.hostname}
+	// set server id
+	server = options.server;
+	
+	// set server name
+	name = options.name;
+	
+	// initial fetch
+	setStatus(bot);
+	
+	// start fetch loop
+	var fetchLoop = setInterval(() => {
+		setStatus(bot);
+	}, fetchTimeMs);
 
-Players: ${data.Data.clients} / ${data.Data.svMaxclients}\`\`\``);
+	// register message event
+	this.onMessage = (msg) => {
+		msg.reply(message);
+	}
+	
+	// register status update event
+	this.onPresenceUpdate = () => {
+		return presence;
+	}
+	
 }
 
-function sendOfflineStatus(message) {
-	message.reply(`**Server Offline**`);
+function setStatus(bot) {
+	request(url + server).then((data) => {
+		setOnlineStatus(data);
+		bot.type.updatePresence(bot.type.client, bot);
+	},
+	(reason) => {
+		setOfflineStatus();
+		bot.type.updatePresence(bot.type.client, bot);
+	});
 }
 
-module.exports = fivem;
+function setOnlineStatus(data) {
+	if (!(data.hasOwnProperty("Data") && data.Data.hasOwnProperty("hostname") && data.Data.hasOwnProperty("clients") && data.Data.hasOwnProperty("svMaxclients") && Date.now() - Date.parse(data.Data.lastSeen) <= 600000)) {
+		setOfflineStatus();
+		return;
+	}
+	
+	message = `**Server Online**\`\`\`${data.Data.hostname}
+
+Players: ${data.Data.clients} / ${data.Data.svMaxclients}\`\`\``;
+	presence = `${name}: ${data.Data.clients} / ${data.Data.svMaxclients}`;
+}
+
+function setOfflineStatus() {
+	message = `**Server Offline**`;
+	presence = `${name}: Offline`;
+}
+
+module.exports = Fivem;

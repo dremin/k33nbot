@@ -3,12 +3,13 @@
 const discord = require('discord.js');
 const config = require('../common/config').config;
 
-function discordClient(bot) {
+function DiscordClient(bot) {
 	
 	this.client = new discord.Client();
 
 	this.client.on('ready', () => {
 		if (config.debug) console.log(`${this.client.user.tag} logged in`);
+		setPresence(this.client, bot);
 	});
 	
 	this.client.on('guildMemberAdd', member => {
@@ -26,13 +27,12 @@ function discordClient(bot) {
 	});
 	
 	this.client.on('message', message => {
-		if (config.debug) console.log(`${this.client.user.tag} saw: ${message.content}`);
 		
 		for (var action in bot.actions) {
 			if (message.content.startsWith(bot.actionPrefix + bot.actions[action].command)) {
 				if (typeof bot.actions[action].plugin.onMessage == 'function') {
 					
-					if (config.debug) console.log(`${this.client.user.tag} executing message action plugin`);
+					if (config.debug) console.log(`${this.client.user.tag} executing message action plugin for message: ${message.content}`);
 					
 					bot.actions[action].plugin.onMessage(message);
 					
@@ -44,8 +44,48 @@ function discordClient(bot) {
 
 
 	this.client.login(bot.token);
+	
+	// periodically set bot presence
+	var presenceUpdate = setInterval(() => {
+		setPresence(this.client, bot);
+	}, 900000);
+	
+	
+	
+	// export functions
+	this.updatePresence = setPresence;
+
+
 
 	return this;
 }
 
-module.exports = discordClient;
+function setPresence(client, bot) {
+	if (client.user) {
+		client.user.setActivity(getPresenceText(client, bot), { type: 'PLAYING' }).then(() => {
+			if (config.debug) console.log(`${client.user.tag} presence updated`);
+		}).catch(() => {
+			if (config.debug) console.log(`${client.user.tag} presence update failed`);
+			});
+	}
+}
+
+function getPresenceText(client, bot) {
+	var presence = '';
+	
+	for (var action in bot.actions) {
+		if (typeof bot.actions[action].plugin.onPresenceUpdate == 'function') {
+				
+			if (config.debug) console.log(`${client.user.tag} executing presence update plugin`);
+			
+			if (action > 0) presence += " | ";
+			
+			presence += bot.actions[action].plugin.onPresenceUpdate();
+			
+		}
+	}
+	
+	return presence;
+}
+
+module.exports = DiscordClient;

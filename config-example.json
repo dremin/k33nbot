@@ -10,6 +10,7 @@
 					"plugin": "battlemetrics",
 					"command": "status rust",
 					"options": {
+						"name": "Rust 10x",
 						"serverId": "3142448"
 					}
 				},
@@ -17,6 +18,7 @@
 					"plugin": "fivem",
 					"command": "status fivem",
 					"options": {
+						"name": "FiveM",
 						"server": "108.94.43.158:30120"
 					}
 				},
@@ -24,6 +26,7 @@
 					"plugin": "mcsrvstatus",
 					"command": "status minecraft",
 					"options": {
+						"name": "Minecraft",
 						"server": "k33ncraft.k33ngaming.com:11654"
 					}
 				},
@@ -31,7 +34,8 @@
 					"plugin": "message",
 					"command": "help",
 					"options": {
-						"message": "Possible commands:\n- .status [fivem|minecraft|rust]\n- .help"
+						"message": "Possible commands:\n- .status [fivem|minecraft|rust]\n- .help",
+						"presence": "Message me: .help"
 					}
 				}
 			]

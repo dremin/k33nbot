@@ -28,10 +28,10 @@
 					}
 				},
 				{
-					"plugin": "penis",
-					"command": "penis",
+					"plugin": "message",
+					"command": "help",
 					"options": {
-						"message": "I like penis"
+						"message": "Possible commands:\n- .status [fivem|minecraft|rust]\n- .help"
 					}
 				}
 			]

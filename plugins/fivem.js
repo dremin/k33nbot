@@ -2,7 +2,7 @@
 
 const url = 'https://servers-live.fivem.net/api/servers/single/';
 const config = require('../common/config').config;
-const request = require('request');
+const request = require('../common/jsonRequest');
 var server = '0.0.0.0:0';
 
 function fivem(client, options) {
@@ -18,25 +18,16 @@ function fivem(client, options) {
 }
 
 function getStatus(message) {
-	request.get({
-		url: url + server,
-		json: true
-		}, (err, res, data) => {
-			if (err) {
-				console.log('Error making FiveM request: ', err);
-				sendOfflineStatus(message);
-			} else if (res.statusCode !== 200) {
-				console.log('Unexpected status code from FiveM: ', res.statusCode);
-				sendOfflineStatus(message);
-			} else {
-				// data is already parsed as JSON:
-				sendOnlineStatus(data, message);
-			}
+	request(url + server).then((data) => {
+		sendOnlineStatus(data, message);
+	},
+	(reason) => {
+		sendOfflineStatus(message);
 	});
 }
 
 function sendOnlineStatus(data, message) {
-	if (Date.now() - Date.parse(data.Data.lastSeen) > 600000) {
+	if (!(data.hasOwnProperty("Data") && data.Data.hasOwnProperty("hostname") && data.Data.hasOwnProperty("clients") && data.Data.hasOwnProperty("svMaxclients") && Date.now() - Date.parse(data.Data.lastSeen) < 600000)) {
 		sendOfflineStatus(message);
 		return;
 	}

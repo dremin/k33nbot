@@ -2,7 +2,7 @@
 
 const url = 'https://api.battlemetrics.com/servers/';
 const config = require('../common/config').config;
-const request = require('request');
+const request = require('../common/jsonRequest');
 var serverId = '0';
 
 function battlemetrics(client, options) {
@@ -18,25 +18,16 @@ function battlemetrics(client, options) {
 }
 
 function getStatus(message) {
-	request.get({
-		url: url + serverId,
-		json: true
-		}, (err, res, data) => {
-			if (err) {
-				console.log('Error making Battlemetrics request: ', err);
-				sendOfflineStatus(message);
-			} else if (res.statusCode !== 200) {
-				console.log('Unexpected status code from Battlemetrics: ', res.statusCode);
-				sendOfflineStatus(message);
-			} else {
-				// data is already parsed as JSON:
-				sendOnlineStatus(data, message);
-			}
+	request(url + serverId).then((data) => {
+		sendOnlineStatus(data, message);
+	},
+	(reason) => {
+		sendOfflineStatus(message);
 	});
 }
 
 function sendOnlineStatus(data, message) {
-	if (data.data.attributes.status != "online") {
+	if (!(data.hasOwnProperty("data") && data.data.hasOwnProperty("attributes") && data.data.attributes.hasOwnProperty("name") && data.data.attributes.hasOwnProperty("ip") && data.data.attributes.hasOwnProperty("port") && (data.data.attributes.hasOwnProperty("details") && data.data.attributes.details.hasOwnProperty("map") && data.data.attributes.details.hasOwnProperty("rust_world_seed") && data.data.attributes.details.hasOwnProperty("rust_world_size") && data.data.attributes.details.hasOwnProperty("rust_fps") && data.data.attributes.details.hasOwnProperty("rust_fps_avg")) && data.data.attributes.hasOwnProperty("players") && data.data.attributes.hasOwnProperty("maxPlayers") && data.data.attributes.status == "online")) {
 		sendOfflineStatus(message);
 		return;
 	}

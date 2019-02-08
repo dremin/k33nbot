@@ -45,11 +45,6 @@ function DiscordClient(bot) {
 
 	this.client.login(bot.token);
 	
-	// periodically set bot presence
-	var presenceUpdate = setInterval(() => {
-		setPresence(this.client, bot);
-	}, 900000);
-	
 	
 	
 	// export functions
@@ -78,9 +73,11 @@ function getPresenceText(client, bot) {
 				
 			if (config.debug) console.log(`${client.user.tag} executing presence update plugin`);
 			
-			if (action > 0) presence += " | ";
+			var pluginPresence = bot.actions[action].plugin.onPresenceUpdate();
 			
-			presence += bot.actions[action].plugin.onPresenceUpdate();
+			if (action > 0 && pluginPresence) pluginPresence = " | " + pluginPresence;
+			
+			if (pluginPresence) presence += pluginPresence;
 			
 		}
 	}

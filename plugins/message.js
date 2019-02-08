@@ -1,30 +1,29 @@
 'use strict';
 
-var client;
-var customMessage = '';
-var statusMessage = '';
-
-function message(client, options) {
+function Message(bot, options) {
 	if (!options.hasOwnProperty("message")) {
 		console.log("Message plugin requires the message option to be present.");
 		return;
 	}
 	
+	this.customMessage = '';
+	this.statusMessage;
+	
 	// set messages
-	customMessage = options.message;
-	statusMessage = options.presence;
+	this.customMessage = options.message;
+	if (options.hasOwnProperty("presence")) this.statusMessage = options.presence;
 
 	// register message event
 	this.onMessage = (message) => {
-		message.reply(customMessage);
+		message.reply(this.customMessage);
 	}
 	
 	// register status update event
 	this.onPresenceUpdate = () => {
-		if (statusMessage) return statusMessage;
+		if (this.statusMessage) return this.statusMessage;
 	}
 	
 	return this;
 }
 
-module.exports = message;
+module.exports = Message;

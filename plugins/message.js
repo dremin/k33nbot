@@ -7,6 +7,7 @@ function Message(bot, options) {
 	}
 	
 	this.customMessage = '';
+	this.embed = {};
 	this.statusMessage;
 	
 	// set messages
@@ -15,7 +16,7 @@ function Message(bot, options) {
 
 	// register message event
 	this.onMessage = (message) => {
-		message.reply(this.customMessage);
+		message.channel.send({content: this.customMessage, embed: { color: 0x520074, title: this.customMessage }});
 	}
 	
 	// register status update event

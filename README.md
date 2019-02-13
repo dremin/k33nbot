@@ -30,27 +30,27 @@ Use the included `config-example.json` as an example of proper syntax to base yo
 ### Plugin-specific options
 Each action plugin may have options that can be used to customize its behavior. Some options may be required, while others are optional.
 
-#### Battlemetrics
+#### battlemetrics
 The `battlemetrics` plugin is currently only supported for Rust servers.
 
 - **name** - Name to show for the server in the bot's presence.
-- **thumbnail** - Thumbnail to show in the reply embed.
-- **image** - Image banner to show in the reply embed.
+- **thumbnail** - URL of thumbnail to show in the reply embed.
+- **image** - URL of image banner to show in the reply embed.
 - **serverId** - Battlemetrics ID for the server.
 
-#### FiveM
+#### fivem
 - **name** - Name to show for the server in the bot's presence.
-- **thumbnail** - Thumbnail to show in the reply embed.
-- **image** - Image banner to show in the reply embed.
-- **server** - IP:Port of the FiveM server.
+- **thumbnail** - URL of thumbnail to show in the reply embed.
+- **image** - URL of image banner to show in the reply embed.
+- **server** - IP:port of the FiveM server.
 
-#### mcserverstat.us
+#### mcserverstatus
 - **name** - Name to show for the server in the bot's presence.
-- **thumbnail** - Thumbnail to show in the reply embed.
-- **image** - Image banner to show in the reply embed.
-- **server** - IP:Port of the Minecraft server.
+- **thumbnail** - URL of thumbnail to show in the reply embed.
+- **image** - URL of image banner to show in the reply embed.
+- **server** - IP:port of the Minecraft server.
 
-#### Message
+#### message
 - **message** - Message to reply with.
 - **presence** - Text to append to the bot's presence.
 

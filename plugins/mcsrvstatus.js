@@ -45,6 +45,7 @@ function Mcsrvstatus(bot, options) {
 		return this.presence;
 	}
 	
+	return this;
 }
 
 Mcsrvstatus.prototype.setStatus = function(bot) {

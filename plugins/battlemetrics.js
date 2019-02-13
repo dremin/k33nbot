@@ -45,6 +45,7 @@ function Battlemetrics(bot, options) {
 		return this.presence;
 	}
 	
+	return this;
 }
 
 Battlemetrics.prototype.setStatus = function(bot) {

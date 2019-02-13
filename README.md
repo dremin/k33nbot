@@ -6,7 +6,7 @@ A simple Discord bot for displaying game server status.
 2. Clone this repository.
 3. Copy `config-example.json` to `~/k33nbot.json`
 4. Customize `k33nbot.json`
-5. Execute, and profit!
+5. `node index.js`
 
 ## Configuration
 K33NBot has a flexible configuration. An instance of K33NBot can consist of one or many bots. Each bot can have one or many actions. Actions have a command associated with them, as well as a plugin, which defines what the action does.

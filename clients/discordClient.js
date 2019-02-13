@@ -4,22 +4,22 @@ const discord = require('discord.js');
 const config = require('../common/config').config;
 
 function DiscordClient(bot) {
-	
+	this.bot = bot;
 	this.client = new discord.Client();
 
 	this.client.on('ready', () => {
 		if (config.debug) console.log(`${this.client.user.tag} logged in`);
-		setPresence(this.client, bot);
+		this.updatePresence();
 	});
 	
 	this.client.on('guildMemberAdd', member => {
 		
-		for (var action in bot.actions) {
-			if (typeof bot.actions[action].plugin.onNewUser == 'function') {
+		for (var action in this.bot.actions) {
+			if (typeof this.bot.actions[action].plugin.onNewUser == 'function') {
 					
 				if (config.debug) console.log(`${this.client.user.tag} executing new user action plugin`);
 				
-				bot.actions[action].plugin.onNewUser(member);
+				this.bot.actions[action].plugin.onNewUser(member);
 				
 			}
 		}
@@ -28,13 +28,13 @@ function DiscordClient(bot) {
 	
 	this.client.on('message', message => {
 		
-		for (var action in bot.actions) {
-			if (message.content.startsWith(bot.actionPrefix + bot.actions[action].command)) {
-				if (typeof bot.actions[action].plugin.onMessage == 'function') {
+		for (var action in this.bot.actions) {
+			if (message.content.startsWith(this.bot.actionPrefix + this.bot.actions[action].command)) {
+				if (typeof this.bot.actions[action].plugin.onMessage == 'function') {
 					
 					if (config.debug) console.log(`${this.client.user.tag} executing message action plugin for message: ${message.content}`);
 					
-					bot.actions[action].plugin.onMessage(message);
+					this.bot.actions[action].plugin.onMessage(message);
 					
 				}
 			}
@@ -44,36 +44,29 @@ function DiscordClient(bot) {
 
 
 	this.client.login(bot.token);
-	
-	
-	
-	// export functions
-	this.updatePresence = setPresence;
-
-
 
 	return this;
 }
 
-function setPresence(client, bot) {
-	if (client.user) {
-		client.user.setActivity(getPresenceText(client, bot), { type: 'PLAYING' }).then(() => {
-			if (config.debug) console.log(`${client.user.tag} presence updated`);
+DiscordClient.prototype.updatePresence = function() {
+	if (this.client.user) {
+		this.client.user.setActivity(this.getPresenceText(this.bot), { type: 'PLAYING' }).then(() => {
+			if (config.debug) console.log(`${this.client.user.tag} presence updated`);
 		}).catch(() => {
-			if (config.debug) console.log(`${client.user.tag} presence update failed`);
+			if (config.debug) console.log(`${this.client.user.tag} presence update failed`);
 			});
 	}
 }
 
-function getPresenceText(client, bot) {
+DiscordClient.prototype.getPresenceText = function() {
 	var presence = '';
 	
-	for (var action in bot.actions) {
-		if (typeof bot.actions[action].plugin.onPresenceUpdate == 'function') {
+	for (var action in this.bot.actions) {
+		if (typeof this.bot.actions[action].plugin.onPresenceUpdate == 'function') {
 				
-			if (config.debug) console.log(`${client.user.tag} executing presence update plugin`);
+			if (config.debug) console.log(`${this.client.user.tag} executing presence update plugin`);
 			
-			var pluginPresence = bot.actions[action].plugin.onPresenceUpdate();
+			var pluginPresence = this.bot.actions[action].plugin.onPresenceUpdate();
 			
 			if (action > 0 && pluginPresence) pluginPresence = " | " + pluginPresence;
 			

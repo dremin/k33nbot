@@ -11,6 +11,8 @@
 					"command": "status rust",
 					"options": {
 						"name": "Rust 10x",
+						"thumbnail": "",
+						"image": "",
 						"serverId": "3142448"
 					}
 				},
@@ -19,6 +21,8 @@
 					"command": "status fivem",
 					"options": {
 						"name": "FiveM",
+						"thumbnail": "",
+						"image": "",
 						"server": "108.94.43.158:30120"
 					}
 				},
@@ -27,6 +31,8 @@
 					"command": "status minecraft",
 					"options": {
 						"name": "Minecraft",
+						"thumbnail": "",
+						"image": "",
 						"server": "k33ncraft.k33ngaming.com:11654"
 					}
 				},

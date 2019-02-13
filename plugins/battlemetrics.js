@@ -3,77 +3,115 @@
 const url = 'https://api.battlemetrics.com/servers/';
 const request = require('../common/jsonRequest');
 const fetchTimeMs = 900000;
-var serverId = '0';
-var message = '';
-var name = 'Battlemetrics';
-var presence = '';
 
 function Battlemetrics(bot, options) {
+	this.embed = {};
+	this.message = '';
+	this.name = 'Battlemetrics';
+	this.presence = '';
+	this.thumbnail = '';
+	this.image = '';
+	
 	if (!options.hasOwnProperty("serverId")) {
 		console.log("Battlemetrics plugin requires the serverId option to be present.");
 		return;
 	}
 	
 	// set server id
-	serverId = options.serverId;
+	this.serverId = options.serverId;
 	
 	// set server name
-	name = options.name;
+	if (options.hasOwnProperty("name")) this.name = options.name;
+	
+	// set graphics
+	if (options.hasOwnProperty("thumbnail")) this.thumbnail = options.thumbnail;
+	if (options.hasOwnProperty("image")) this.image = options.image;
 	
 	// initial fetch
-	setStatus(bot);
+	this.setStatus(bot);
 	
 	// start fetch loop
 	var fetchLoop = setInterval(() => {
-		setStatus(bot);
+		this.setStatus(bot);
 	}, fetchTimeMs);
 
 	// register message event
 	this.onMessage = (msg) => {
-		msg.reply(message);
+		msg.channel.send({content: this.message, embed: this.embed});
 	}
 	
 	// register status update event
 	this.onPresenceUpdate = () => {
-		return presence;
+		return this.presence;
 	}
 	
 }
 
-function setStatus(bot) {
-	request(url + serverId).then((data) => {
-		setOnlineStatus(data);
-		bot.type.updatePresence(bot.type.client, bot);
+Battlemetrics.prototype.setStatus = function(bot) {
+	request(url + this.serverId).then((data) => {
+		this.setOnlineStatus(data);
+		bot.type.updatePresence();
 	},
 	(reason) => {
-		setOfflineStatus();
-		bot.type.updatePresence(bot.type.client, bot);
+		this.setOfflineStatus();
+		bot.type.updatePresence();
 	});
 }
 
-function setOnlineStatus(data) {
+Battlemetrics.prototype.setOnlineStatus = function(data) {
 	if (!(data.hasOwnProperty("data") && data.data.hasOwnProperty("attributes") && data.data.attributes.hasOwnProperty("name") && data.data.attributes.hasOwnProperty("ip") && data.data.attributes.hasOwnProperty("port") && (data.data.attributes.hasOwnProperty("details") && data.data.attributes.details.hasOwnProperty("map") && data.data.attributes.details.hasOwnProperty("rust_world_seed") && data.data.attributes.details.hasOwnProperty("rust_world_size") && data.data.attributes.details.hasOwnProperty("rust_fps") && data.data.attributes.details.hasOwnProperty("rust_fps_avg")) && data.data.attributes.hasOwnProperty("players") && data.data.attributes.hasOwnProperty("maxPlayers") && data.data.attributes.status == "online")) {
-		setOfflineStatus();
+		this.setOfflineStatus();
 		return;
 	}
 	
-	message = `**Server Online**\`\`\`${data.data.attributes.name}
+	this.message = `**Server Online**\`\`\`${data.data.attributes.name}
 IP: ${data.data.attributes.ip}:${data.data.attributes.port}
 
-Map: ${data.data.attributes.details.map}
 Players: ${data.data.attributes.players} / ${data.data.attributes.maxPlayers}
 
-World Seed: ${data.data.attributes.details.rust_world_seed}
-World Size: ${data.data.attributes.details.rust_world_size}
+Map: ${data.data.attributes.details.map}
+Seed: ${data.data.attributes.details.rust_world_seed}
+Size: ${data.data.attributes.details.rust_world_size}
 
-FPS: ${data.data.attributes.details.rust_fps}
-Avg FPS: ${data.data.attributes.details.rust_fps_avg}\`\`\``;
-	presence = `${name}: ${data.data.attributes.players} / ${data.data.attributes.maxPlayers}`;
+Current FPS: ${data.data.attributes.details.rust_fps}
+Average FPS: ${data.data.attributes.details.rust_fps_avg}\`\`\``;
+
+	this.embed = {
+		color: 0x12c000,
+		title: data.data.attributes.name,
+		description: `IP: ${data.data.attributes.ip}:${data.data.attributes.port}`,
+		thumbnail: {
+			url: this.thumbnail
+	    },
+	    image: {
+		    url: this.image
+	    },
+		fields: [{
+			name: "Players",
+			value: `${data.data.attributes.players} / ${data.data.attributes.maxPlayers}`
+		},
+		{
+			name: "World",
+			value: `Map: ${data.data.attributes.details.map}\nSeed: ${data.data.attributes.details.rust_world_seed}\nSize: ${data.data.attributes.details.rust_world_size}`,
+			inline: true
+		},
+		{
+			name: "FPS",
+			value: `Current: ${data.data.attributes.details.rust_fps}\nAverage: ${data.data.attributes.details.rust_fps_avg}`,
+			inline: true
+		}]
+	};
+
+	this.presence = `${this.name}: ${data.data.attributes.players} / ${data.data.attributes.maxPlayers}`;
 }
 
-function setOfflineStatus() {
-	message = `**Server Offline**`;
-	presence = `${name}: Offline`;
+Battlemetrics.prototype.setOfflineStatus = function() {
+	this.message = `**Server Offline**`;
+	this.embed = {
+		color: 0x520074,
+		title: "Server Offline"
+	};
+	this.presence = `${this.name}: Offline`;
 }
 
 module.exports = Battlemetrics;

@@ -19,11 +19,12 @@ Use the included `config-example.json` as an example of proper syntax to base yo
 ### Bot configuration
 - **type** - Specifies the behavior of the bot. Current options are `discordClient` and `discordWebhook` (coming soon).
 - **actionPrefix** - Messages beginning with this prefix, followed by an action command, will be executed by this bot.
+- **defaultPresence** - If present, always adds this string to the bot's presence text.
 - **token** - The Discord API token to use for the bot.
 - **actions** - An array of actions for the bot, detailed in the next section.
 
 ### Action configuration
-- **plugin** - Specifies the behavior of the action. Current options are `battlemetrics`, `fivem`, `mcserverstatus`, and `message`.
+- **plugin** - Specifies the behavior of the action. Current options are `battlemetrics`, `fivem`, `mcserverstatus`, `message`, and `timer`.
 - **command** - Messages beginning with the bot's `actionPrefix`, followed by this command, will execute this action.
 - **options** - An array of options that are specific to the plugin defined.
 
@@ -51,8 +52,18 @@ The `battlemetrics` plugin is currently only supported for Rust servers.
 - **server** - IP:port of the Minecraft server.
 
 #### message
+Reply to a command with a message.
+
 - **message** - Message to reply with.
 - **presence** - Text to append to the bot's presence.
+- **useEmbed** - If true, sends the message using embed formatting.
+
+#### timer
+Send a message to a specific channel at the specified interval.
+
+- **channel** - Name of channel to send the message to.
+- **interval** - Number of seconds between sending the message.
+- **message** - The message to send.
 
 ## Need help?
 Sorry! This bot comes as-is, without support.

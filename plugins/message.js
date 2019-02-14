@@ -6,17 +6,22 @@ function Message(bot, options) {
 		return;
 	}
 	
-	this.customMessage = '';
-	this.embed = {};
 	this.statusMessage;
+	this.messageContent;
 	
-	// set messages
-	this.customMessage = options.message;
+	// set status message
 	if (options.hasOwnProperty("presence")) this.statusMessage = options.presence;
+	
+	// set embed if enabled
+	if (options.hasOwnProperty("useEmbed") && options.useEmbed) {
+		this.messageContent = {content: options.message, embed: { color: 0x520074, title: options.message }};
+	} else {
+		this.messageContent = options.message;
+	}
 
 	// register message event
 	this.onMessage = (message) => {
-		message.channel.send({content: this.customMessage, embed: { color: 0x520074, title: this.customMessage }});
+		message.channel.send(this.messageContent);
 	}
 	
 	// register status update event

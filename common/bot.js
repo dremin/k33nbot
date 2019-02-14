@@ -12,6 +12,9 @@ function Bot(botConfig) {
 	// set action prefix
 	this.actionPrefix = botConfig.actionPrefix;
 	
+	// set default presence if present
+	if (botConfig.hasOwnProperty("defaultPresence")) this.defaultPresence = botConfig.defaultPresence;
+	
 	// set token
 	this.token = botConfig.token;
 	

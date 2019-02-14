@@ -49,7 +49,7 @@ function Fivem(bot, options) {
 }
 
 Fivem.prototype.setStatus = function(bot) {
-	request(url + this.server).then((data) => {
+	request(url + this.server, fetchTimeMs).then((data) => {
 		this.setOnlineStatus(data);
 		bot.type.updatePresence();
 	},

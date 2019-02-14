@@ -49,7 +49,7 @@ function Battlemetrics(bot, options) {
 }
 
 Battlemetrics.prototype.setStatus = function(bot) {
-	request(url + this.serverId).then((data) => {
+	request(url + this.serverId, fetchTimeMs).then((data) => {
 		this.setOnlineStatus(data);
 		bot.type.updatePresence();
 	},

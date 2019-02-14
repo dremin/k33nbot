@@ -14,4 +14,4 @@ for (var bot in config.bots) {
 	bots.push(new (require('./common/bot'))(config.bots[bot]));
 }
 
-if (config.debug) console.log('K33NBot started');
+if (config.debug) console.log('K33NBot running');

@@ -15,3 +15,20 @@ for (var bot in config.bots) {
 }
 
 if (config.debug) console.log('K33NBot running');
+
+exports.reload = () => {
+	var promises = [];
+	
+	for (var bot in bots) {
+		promises.push(bots[bot].type.logout());
+	}
+	
+	Promise.all(promises).then(() => {
+		bots = [];
+	
+		// initialize bots, which will initialize everything else
+		for (var bot in config.bots) {
+			bots.push(new (require('./common/bot'))(config.bots[bot]));
+		}
+	});
+}

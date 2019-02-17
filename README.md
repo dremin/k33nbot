@@ -31,6 +31,11 @@ Use the included `config-example.json` as an example of proper syntax to base yo
 ### Plugin-specific options
 Each action plugin may have options that can be used to customize its behavior. Some options may be required, while others are optional.
 
+#### admin
+Allows manipulation of configuration JSON.
+
+- **allowedRole** - Users in this role can use this plugin.
+
 #### battlemetrics
 The `battlemetrics` plugin is currently only supported for Rust servers.
 

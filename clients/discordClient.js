@@ -65,6 +65,14 @@ function DiscordClient(bot) {
 	return this;
 }
 
+DiscordClient.prototype.logout = function() {
+	for (var action in this.bot.actions) {
+		delete this.bot.actions[action];
+	}
+	
+	return this.client.destroy();
+}
+
 DiscordClient.prototype.commandList = function() {
 	var helpText = '**Possible commands:**';
 	

@@ -67,6 +67,11 @@ function DiscordClient(bot) {
 
 DiscordClient.prototype.logout = function() {
 	for (var action in this.bot.actions) {
+		if (typeof this.bot.actions[action].plugin.dispose == 'function') {
+			if (config.debug) console.log(`Disposing plugin`);
+			this.bot.actions[action].plugin.dispose();
+		}
+		
 		delete this.bot.actions[action];
 	}
 	

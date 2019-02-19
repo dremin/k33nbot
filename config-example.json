@@ -53,6 +53,12 @@
 						"interval": "604800",
 						"message": "Enjoy this message each week!"
 					}
+				},
+				{
+					"plugin": "greeter",
+					"options": {
+						"channel": "welcome"
+					}
 				}
 			]
 		}

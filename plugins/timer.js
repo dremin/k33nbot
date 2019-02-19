@@ -16,6 +16,11 @@ function Timer(bot, options) {
 		this.sendMessage(bot);
 	}, this.interval);
 	
+	// dispose of timer
+	this.dispose = () => {
+		clearInterval(timerLoop)
+	}
+	
 	return this;
 }
 

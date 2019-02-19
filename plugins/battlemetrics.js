@@ -45,6 +45,11 @@ function Battlemetrics(bot, options) {
 		return this.presence;
 	}
 	
+	// dispose of timer
+	this.dispose = () => {
+		clearInterval(fetchLoop)
+	}
+	
 	return this;
 }
 

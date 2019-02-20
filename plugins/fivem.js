@@ -65,7 +65,7 @@ Fivem.prototype.setStatus = function(bot) {
 }
 
 Fivem.prototype.setOnlineStatus = function(data) {
-	if (!(data.hasOwnProperty("EndPoint") && data.hasOwnProperty("Data") && data.Data.hasOwnProperty("hostname") && data.Data.hasOwnProperty("clients") && data.Data.hasOwnProperty("svMaxclients") && Date.now() - Date.parse(data.Data.lastSeen) <= 600000)) {
+	if (!(data.hasOwnProperty("EndPoint") && data.hasOwnProperty("Data") && data.Data.hasOwnProperty("hostname") && data.Data.hasOwnProperty("clients") && data.Data.hasOwnProperty("svMaxclients") && Date.now() - Date.parse(data.Data.lastSeen) <= 28800000)) {
 		this.setOfflineStatus();
 		return;
 	}

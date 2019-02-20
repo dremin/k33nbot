@@ -13,7 +13,7 @@ function Message(bot, options) {
 	if (options.hasOwnProperty("presence")) this.statusMessage = options.presence;
 	
 	// set embed if enabled
-	if (options.hasOwnProperty("useEmbed") && options.useEmbed) {
+	if (options.hasOwnProperty("useEmbed") && (options.useEmbed == true || options.useEmbed == "true")) {
 		this.messageContent = {content: options.message, embed: { color: 0x520074, title: options.message }};
 	} else {
 		this.messageContent = options.message;

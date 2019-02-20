@@ -25,21 +25,25 @@ function Timer(bot, options) {
 }
 
 Timer.prototype.sendMessage = function(bot) {
-	var destChannel = bot.type.client.channels.find(channel => channel.name === this.channel);
-	
-	// return error if no channel returned
-	if (!destChannel) {
-		console.log(`Timer could not find channel ${this.channel}.`);
-		return;
+	if (bot.botConfig.type === "discordClient") {
+		var destChannel = bot.type.client.channels.find(channel => channel.name === this.channel);
+		
+		// return error if no channel returned
+		if (!destChannel) {
+			console.log(`Timer could not find channel ${this.channel}.`);
+			return;
+		}
+		
+		// return error if not a channel type we can send to
+		if (destChannel.type === "voice" || destChannel.type === "category") {
+			console.log(`Timer unable to use channel ${this.channel} due to its type.`);
+			return;
+		}
+		
+		destChannel.send(this.message);
+	} else if (bot.botConfig.type === "discordWebhook") {
+		bot.type.send(this.message);
 	}
-	
-	// return error if not a channel type we can send to
-	if (destChannel.type === "voice" || destChannel.type === "category") {
-		console.log(`Timer unable to use channel ${this.channel} due to its type.`);
-		return;
-	}
-	
-	destChannel.send(this.message);
 }
 
 module.exports = Timer;

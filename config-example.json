@@ -3,9 +3,11 @@
 	"bots": [
 		{
 			"type": "discordClient",
-			"actionPrefix": ".",
-			"defaultPresence": "Message me: .help",
-			"token": "",
+			"options": {
+				"actionPrefix": ".",
+				"defaultPresence": "Message me: .help",
+				"token": ""
+			},
 			"actions": [
 				{
 					"plugin": "battlemetrics",
@@ -55,9 +57,33 @@
 					}
 				},
 				{
+				    "plugin": "admin",
+				    "command": "config",
+				    "hideFromHelp": true,
+				    "options": {
+				        "allowedRole": "Development Team"
+				    }
+				},
+				{
 					"plugin": "greeter",
 					"options": {
 						"channel": "welcome"
+					}
+				}
+			]
+		},
+		{
+			"type": "discordWebhook",
+			"options": {
+				"webhookUrl": ""
+			},
+			"actions": [
+				{
+					"plugin": "timer",
+					"options": {
+						"channel": "general",
+						"interval": "604800",
+						"message": "Enjoy this message each week!"
 					}
 				}
 			]

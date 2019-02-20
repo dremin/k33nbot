@@ -1,22 +1,17 @@
 'use strict';
 
 function Bot(botConfig) {
-	if (!(botConfig.hasOwnProperty("actionPrefix") && botConfig.hasOwnProperty("token") && botConfig.hasOwnProperty("actions") && botConfig.hasOwnProperty("type"))) {
+	if (!(botConfig.hasOwnProperty("actions") && botConfig.hasOwnProperty("type"))) {
 		console.log("Incomplete bot configuration.");
 		return this;
 	}
 	
 	this.type;
 	this.actions = [];
-	
-	// set action prefix
-	this.actionPrefix = botConfig.actionPrefix;
+	this.botConfig = botConfig;
 	
 	// set default presence if present
 	if (botConfig.hasOwnProperty("defaultPresence")) this.defaultPresence = botConfig.defaultPresence;
-	
-	// set token
-	this.token = botConfig.token;
 	
 	// set type, which will initialize client
 	this.type = new (require(`../clients/${botConfig.type}`))(this);

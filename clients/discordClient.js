@@ -39,6 +39,7 @@ function DiscordClient(bot) {
 	});
 	
 	this.client.on('message', message => {
+		// if (config.debug) console.log(`${this.client.user.tag} saw message: ${message.content}`);
 		if (message.content.startsWith(this.actionPrefix)) {
 			var matches = 0;
 			

@@ -53,7 +53,7 @@ The `battlemetrics` plugin is currently only supported for Rust servers.
 - **image** - URL of image banner to show in the reply embed.
 - **serverId** - Battlemetrics ID for the server.
 
-#### fivem
+#### fivem and fivem2
 - **name** - Name to show for the server in the bot's presence.
 - **thumbnail** - URL of thumbnail to show in the reply embed.
 - **image** - URL of image banner to show in the reply embed.

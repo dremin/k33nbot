@@ -1,10 +1,10 @@
 'use strict';
 
-const url = 'https://servers-live.fivem.net/api/servers/single/';
+const url = '/krp_playercount/';
 const request = require('../common/jsonRequest');
-const fetchTimeMs = 600000;
+const fetchTimeMs = 60000;
 
-function Fivem(bot, options) {
+function Fivem2(bot, options) {
 	this.embed = {};
 	this.message = '';
 	this.name = 'FiveM';
@@ -13,7 +13,7 @@ function Fivem(bot, options) {
 	this.image = '';
 	
 	if (!options.hasOwnProperty("server")) {
-		console.log("FiveM plugin requires the server option to be present.");
+		console.log("FiveM2 plugin requires the server option to be present.");
 		return;
 	}
 	
@@ -53,33 +53,31 @@ function Fivem(bot, options) {
 	return this;
 }
 
-Fivem.prototype.setStatus = function(bot) {
-	request(url + this.server, fetchTimeMs).then((data) => {
+Fivem2.prototype.setStatus = function(bot) {
+	request('http://' + this.server + url, fetchTimeMs).then((data) => {
 		this.setOnlineStatus(data);
 		bot.type.updatePresence();
 	},
 	(reason) => {
-		if (reason != 'serverError') {
-			this.setOfflineStatus();
-			bot.type.updatePresence();
-		}
+		this.setOfflineStatus();
+		bot.type.updatePresence();
 	});
 }
 
-Fivem.prototype.setOnlineStatus = function(data) {
-	if (!(data.hasOwnProperty("EndPoint") && data.hasOwnProperty("Data") && data.Data.hasOwnProperty("hostname") && data.Data.hasOwnProperty("clients") && data.Data.hasOwnProperty("svMaxclients") && Date.now() - Date.parse(data.Data.lastSeen) <= 28800000)) {
+Fivem2.prototype.setOnlineStatus = function(data) {
+	if (!(data.hasOwnProperty("name") && data.hasOwnProperty("numPlayers") && data.hasOwnProperty("maxPlayers"))) {
 		this.setOfflineStatus();
 		return;
 	}
 	
-	this.message = `**Server Online**\`\`\`${data.Data.hostname}
+	this.message = `**Server Online**\`\`\`${data.name}
 
-Players: ${data.Data.clients} / ${data.Data.svMaxclients}\`\`\``;
+Players: ${data.numPlayers} / ${data.maxPlayers}\`\`\``;
 
 	this.embed = {
 		color: 0x12c000,
-		title: data.Data.hostname,
-		description: `IP: ${data.EndPoint}`,
+		title: data.name,
+		description: `Direct Connect: ${this.server}`,
 		thumbnail: {
 			url: this.thumbnail
 	    },
@@ -88,14 +86,14 @@ Players: ${data.Data.clients} / ${data.Data.svMaxclients}\`\`\``;
 	    },
 		fields: [{
 			name: "Players",
-			value: `${data.Data.clients} / ${data.Data.svMaxclients}`
+			value: `${data.numPlayers} / ${data.maxPlayers}`
 		}]
 	};
 	
-	this.presence = `${this.name}: ${data.Data.clients} / ${data.Data.svMaxclients}`;
+	this.presence = `${this.name}: ${data.numPlayers} / ${data.maxPlayers}`;
 }
 
-Fivem.prototype.setOfflineStatus = function() {
+Fivem2.prototype.setOfflineStatus = function() {
 	this.message = `**Server Offline**`;
 	this.embed = {
 		color: 0x520074,
@@ -104,4 +102,4 @@ Fivem.prototype.setOfflineStatus = function() {
 	this.presence = `${this.name}: Offline`;
 }
 
-module.exports = Fivem;
+module.exports = Fivem2;

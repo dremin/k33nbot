@@ -86,7 +86,7 @@ Admin.prototype.viewConfig = function(commandBits) {
 			
 			switch (nodeName) {
 				case 'bots':
-					reply += `type: _${configObj[item].type}_; token: _${configObj[item].options.token}_`;
+					reply += `type: _${configObj[item].type}_; token: \`${configObj[item].options.token}\``;
 					break;
 				case 'actions':
 					reply += `plugin: _${configObj[item].plugin}_; command: _${configObj[item].command}_`;

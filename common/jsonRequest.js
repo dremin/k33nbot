@@ -64,7 +64,17 @@ function makeRequest(url, cacheTimeoutMs) {
 					}
 					
 					reject('error');
-				} else if (res.statusCode !== 200) {
+				} else if (res.statusCode == 500) {
+					if (config.debug) console.log(`Server error from: ${res.statusCode}`);
+					
+					if (useCache) {
+						cacheItem.error = true;
+						cacheItem.inFlight = false;
+						if (config.debug) console.log(`Saved error response to cache.`);
+					}
+					
+					reject('serverError');
+				}  else if (res.statusCode !== 200) {
 					if (config.debug) console.log(`Unexpected status code: ${res.statusCode}`);
 					
 					if (useCache) {

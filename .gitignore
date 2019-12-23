@@ -1,3 +1,6 @@
+# Old plugins
+plugins-old/
+
 # Logs
 logs
 *.log

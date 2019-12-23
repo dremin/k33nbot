@@ -7,6 +7,8 @@ const helpCmd = 'help';
 function DiscordClient(bot) {
 	this.bot = bot;
 	this.client = new discord.Client();
+	this.needsReconnect = false;
+	this.reconnectInterval = null;
 	
 	if (!(this.bot.botConfig.hasOwnProperty("options") && this.bot.botConfig.options.hasOwnProperty("token") && this.bot.botConfig.options.hasOwnProperty("actionPrefix"))) {
 		console.log("Incomplete bot configuration.");
@@ -20,9 +22,24 @@ function DiscordClient(bot) {
 	if (this.bot.botConfig.options.hasOwnProperty("defaultPresence")) this.defaultPresence = this.bot.botConfig.options.defaultPresence;
 
 	this.client.on('ready', () => {
+		this.needsReconnect = false;
 		if (config.debug) console.log(`${this.client.user.tag} logged in`);
 		this.updatePresence();
 	});
+
+	this.client.on('disconnect', (event) => {
+		// reconnect on an interval in case we get disconnected
+		if (this.needsReconnect == false) { // only do this logic if we haven't already
+			this.needsReconnect = true;
+			this.reconnectInterval = setInterval(() => {
+				if (this.needsReconnect == false) {
+					clearInterval(this.reconnectInterval);
+				} else {
+					this.client.login(bot.botConfig.options.token);
+				}
+			}, 10000);
+		}
+	})
 	
 	this.client.on('guildMemberAdd', member => {
 		

@@ -6,7 +6,8 @@ A simple Discord bot for displaying game server status.
 2. Clone this repository.
 3. Copy `config-example.json` to `~/k33nbot.json`
 4. Customize `k33nbot.json`
-5. `node index.js`
+5. `npm install`
+6. `node index.js`
 
 ## Configuration
 K33NBot has a flexible configuration. An instance of K33NBot can consist of one or many bots. Each bot can have one or many actions. Actions have a command associated with them, as well as a plugin, which defines what the action does.
@@ -46,7 +47,7 @@ Allows manipulation of configuration JSON.
 - **allowedRole** - Users in this role can use this plugin.
 
 #### battlemetrics
-The `battlemetrics` plugin is currently only supported for Rust servers.
+The `battlemetrics` plugin has only been tested with Project Zomboid and Rust servers.
 
 - **name** - Name to show for the server in the bot's presence.
 - **thumbnail** - URL of thumbnail to show in the reply embed.

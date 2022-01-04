@@ -65,11 +65,48 @@ Battlemetrics.prototype.setStatus = function(bot) {
 }
 
 Battlemetrics.prototype.setOnlineStatus = function(data) {
-	if (!(data.hasOwnProperty("data") && data.data.hasOwnProperty("attributes") && data.data.attributes.hasOwnProperty("name") && data.data.attributes.hasOwnProperty("ip") && data.data.attributes.hasOwnProperty("port") && (data.data.attributes.hasOwnProperty("details") && data.data.attributes.details.hasOwnProperty("map") && data.data.attributes.details.hasOwnProperty("rust_world_seed") && data.data.attributes.details.hasOwnProperty("rust_world_size") && data.data.attributes.details.hasOwnProperty("rust_fps") && data.data.attributes.details.hasOwnProperty("rust_fps_avg")) && data.data.attributes.hasOwnProperty("players") && data.data.attributes.hasOwnProperty("maxPlayers") && data.data.attributes.status == "online")) {
+	if (!(data.hasOwnProperty("data") && data.data.hasOwnProperty("attributes") && data.data.attributes.hasOwnProperty("name") && data.data.attributes.hasOwnProperty("ip") && data.data.attributes.hasOwnProperty("port") && data.data.attributes.hasOwnProperty("details") && data.data.attributes.details.hasOwnProperty("map") && data.data.attributes.hasOwnProperty("players") && data.data.attributes.hasOwnProperty("maxPlayers") && data.data.attributes.status == "online")) {
 		this.setOfflineStatus();
 		return;
 	}
+
+	this.presence = `${this.name}: ${data.data.attributes.players} / ${data.data.attributes.maxPlayers}`;
 	
+	if (data.data.attributes.details.hasOwnProperty("rust_world_seed") && data.data.attributes.details.hasOwnProperty("rust_world_size") && data.data.attributes.details.hasOwnProperty("rust_fps") && data.data.attributes.details.hasOwnProperty("rust_fps_avg")) {
+		// Must be a Rust server, use Rust-specific messaging
+		this.setOnlineStatusRust(data);
+	} else {
+		this.message = `**Server Online**\`\`\`${data.data.attributes.name}
+IP: ${data.data.attributes.ip}:${data.data.attributes.port}
+
+Players: ${data.data.attributes.players} / ${data.data.attributes.maxPlayers}
+
+Map: ${data.data.attributes.details.map}\`\`\``;
+
+		this.embed = {
+			color: 0x12c000,
+			title: data.data.attributes.name,
+			description: `IP: ${data.data.attributes.ip}:${data.data.attributes.port}`,
+			thumbnail: {
+				url: this.thumbnail
+			},
+			image: {
+				url: this.image
+			},
+			fields: [{
+				name: "Players",
+				value: `${data.data.attributes.players} / ${data.data.attributes.maxPlayers}`
+			},
+			{
+				name: "World",
+				value: `Map: ${data.data.attributes.details.map}`,
+				inline: true
+			}]
+		};
+	}
+}
+
+Battlemetrics.prototype.setOnlineStatusRust = function(data) {
 	this.message = `**Server Online**\`\`\`${data.data.attributes.name}
 IP: ${data.data.attributes.ip}:${data.data.attributes.port}
 
@@ -107,8 +144,6 @@ Average FPS: ${data.data.attributes.details.rust_fps_avg}\`\`\``;
 			inline: true
 		}]
 	};
-
-	this.presence = `${this.name}: ${data.data.attributes.players} / ${data.data.attributes.maxPlayers}`;
 }
 
 Battlemetrics.prototype.setOfflineStatus = function() {

@@ -65,7 +65,7 @@ Battlemetrics.prototype.setStatus = function(bot) {
 }
 
 Battlemetrics.prototype.setOnlineStatus = function(data) {
-	if (!(data.hasOwnProperty("data") && data.data.hasOwnProperty("attributes") && data.data.attributes.hasOwnProperty("name") && data.data.attributes.hasOwnProperty("ip") && data.data.attributes.hasOwnProperty("port") && data.data.attributes.hasOwnProperty("details") && data.data.attributes.details.hasOwnProperty("map") && data.data.attributes.hasOwnProperty("players") && data.data.attributes.hasOwnProperty("maxPlayers") && data.data.attributes.status == "online")) {
+	if (!(data.hasOwnProperty("data") && data.data.hasOwnProperty("attributes") && data.data.attributes.hasOwnProperty("name") && data.data.attributes.hasOwnProperty("ip") && data.data.attributes.hasOwnProperty("port") && data.data.attributes.hasOwnProperty("players") && data.data.attributes.hasOwnProperty("maxPlayers") && data.data.attributes.status == "online")) {
 		this.setOfflineStatus();
 		return;
 	}
@@ -79,9 +79,7 @@ Battlemetrics.prototype.setOnlineStatus = function(data) {
 		this.message = `**Server Online**\`\`\`${data.data.attributes.name}
 IP: ${data.data.attributes.ip}:${data.data.attributes.port}
 
-Players: ${data.data.attributes.players} / ${data.data.attributes.maxPlayers}
-
-Map: ${data.data.attributes.details.map}\`\`\``;
+Players: ${data.data.attributes.players} / ${data.data.attributes.maxPlayers}\`\`\``;
 
 		this.embed = {
 			color: 0x12c000,
@@ -96,11 +94,6 @@ Map: ${data.data.attributes.details.map}\`\`\``;
 			fields: [{
 				name: "Players",
 				value: `${data.data.attributes.players} / ${data.data.attributes.maxPlayers}`
-			},
-			{
-				name: "World",
-				value: `Map: ${data.data.attributes.details.map}`,
-				inline: true
 			}]
 		};
 	}
